@@ -41,791 +41,529 @@
 					<p>
 						<small>Created by <a href="http://twitter.com/aquaroris">@aquaroris</a></small>
 					</p>
+					<aside class="notes">
+					<p>I am Johannes from NUS Hackers and I will be giving this workshop on UNIX and Shell Scripting.</p>
+					<p>There will be facilitators around, so if you have any questions, feel free to raise your hand</p>
+					<p>Also feel free to tell me if you're not done with something or don't understand it.</p>
+					</aside>
 				</section>
+				<section data-markdown data-notes="^Note:">
+					## Overview
 
+					* Setup
+					* UNIX
+					* bash
+					* writing bash scripts
+					* some bash scripts
+
+					Note:
+					So for this session I'll be going through several things, a bit about UNIX, a bit about bash, and a bit about writing bash scripts.
+
+					But before we get to this, I'd like to ensure that you have your Vagrant installation set up.
+				</section>
 				<section>
-					<section data-markdown>
-						<script type="text/template">
-							## The Unix Philosophy
+					<section data-markdown data-notes="^Note:">
+						## Setting up Vagrant
 
-							From The Art of Unix Programming by esr (Eric S. Raymond)
-						</script>
+
+						* If you've downloaded vagrant and the image from the internet, great!
+
+						Note:
+						So, if you already have Vagrant set up, that's great!
 					</section>
-					<section data-markdown>
-						<script type="text/template">
-						* Modularity
-						* Clarity
-						* Composition
-						* Simplicity
-						* Parsimony
-						* Transparency
-						* Robustness
-						* Representation
-						* Least Surprise
-						* Silence
-						* Repair
-						* Economy
-						* Generation
-						* Optimization
-						* Extensibility
-						</script>
+					<section data-markdown data-notes="^Note:">
+						## Otherwise
+
+						* Copy the vagrant folder from the thumb drive to your user folder
+						* Install Vagrant
+							* Windows: Vagrant_1.3.1.msi
+							* OS X: Vagrant_1.3.1.dmg
+							* Debian/Ubuntu: use apt-get
+						* Open a terminal
+						* Navigate to the vagrant directory
+							* Windows: dir, cd
+							* OS X/Linux: ls, cd
+						* Type in
+							* vagrant add precise32 precise32.box
+							* vagrant up
+							* vagrant ssh
+
+						Note:
+						But if you have yet to set up Vagrant, we are passing USBs around, and in them are what you need to install vagrant. So copy the vagrant folder to your user folder or home folder (for convenience), and run the appropriate installer. For Debian and Ubuntu, I suggest you do sudo apt-get vagrant instead.
+
+						So once you have Vagrant installed fire up a terminal and navigate to the folder. For Windows users that means cmd.exe, and for OS X and Linux users that means your Terminal. To go into a folder, use the cd command. To list the commands in your current folder, use dir.
+
+						When you're in the vagrant directory in your terminal, type in these commands.
+
+						The first will tell your Vagrant installation to add the precise32.box image to your installation's virtual machines.
+
+						The second will bring it up.
+
+						The last command will ssh you into your virtual machine.
 					</section>
-					<section data-markdown>
-						<script type="text/template">
-						## Modularity
+					<section data-markdown data-notes="^Note:">
+						##  Why Vagrant?
 
-						Simple parts. Clean interfaces.
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						## Clarity
+						* Vagrant is a virtual machine tool
+						* We'll be using a 32-bit Ubuntu Precise as our environment
+						* Ubuntu is a common choice if you're administrating cloud servers.
 
-						clear code &gt; clever code
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						## Composition
+						Note:
+						Now, I want to talk a bit on why we are using Vagrant.
 
-						Design programs to be connected to other programs.
+						Now why use Vagrant and why Ubuntu? We use vagrant so that we can all run in the same environment; there are differnces between the tools used in OS X and cygwin and Solaris and Ubuntu. Using the same OS will make it easier for you and me.
 
-						Use well-known data exchange formats.
-
-						* whitespace-separated ASCII files
-						* XML
-						* JSON
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						## Simplicity
-
-						Separate policy from mechanism.
-
-						Separate design from implementation.
-
-						Use tests to ensure implementation follows design.
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						## Parsimony
-
-						Write small programs. Write big programs if you have to.
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						## Transparency
-
-						Write for visibility for easier inspection and debugging.
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						## Robustness
-
-						Transparent + Simple -> Robust<br>
-						Simple -> Hard to go wrong.<br>
-						Transparent -> Easy to find out what goes wrong.
-
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						## Representation
-
-						Put complexity in data structures.
-
-						Program logic should be as stupid and simple as possible.
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						## Least Surprise
-
-						Always do the least surprising thing.
-
-						* Support common idioms
-						* Match user intention
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						## Silence
-
-						If nothing funny is happening, shut up.
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						## Repair
-
-						If something funny is happening, make a lot of noise ASAP.
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						## Economy
-
-						valueOf(programmer time) &gt; valueOf(machineTime)
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						## Generation
-
-						Automate everything you have to do more than twice.
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						## Optimization
-
-						Prototype first. Premature optimization is the root of all evil.
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						## Diversity
-
-						There is probably no "one true way".
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						## Extensibility
-
-						Design for the future. It will be sooner than you think.
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						# K.I.S.S
-
-						Keep It Simple, Stupid
-						</script>
+						Why Ubuntu? That's quite an arbitrary choice, but it's about the most popular free OS you can find. That means that if you're doing something like spinning up a cloud server on Amazon Web Services you'll most likely want to use an Ubuntu instance.
 					</section>
 				</section>
 
 				<section>
-					<section data-markdown>
-						<script type="text/template">
-							## The UNIX Filesystem
-							* No C:\ drive, no D:\ drive; just one root '/' directory.
-							* Everything is a file (or a process).
-						</script>
+					<section data-markdown data-notes="^Note:">
+						## UNIX
+
+						* UNIX and Unix-like systems
+						* Unix directory structure
+						* Unix programs
+					</section>
+					<section data-markdown data-notes="^Note:">
+						## UNIX and Unix-like systems
+
+						* Unix
+							* Solaris
+						* BSD
+							* Darwin / OS X
+							* OpenBSD
+						* Linux (GNU utilities)
+							* Ubuntu
+							* Red Hat Enterprise Linux
+
+						Note:
+						So now that we're done with setting up the virtual machine, let's take a step back. So, broadly, UNIX and Unix-like operating systems can be classified under three families, the original, proprietary Unix line, the BSD family, and the GNU/Linux family. I'll just refer to all of them as Unix.
+
+						So, what I've heard is that there is a lot of overlap between Unix and BSD and that commands in both those systems behave somewhat the same.
+
+						Linux, however, has of its programs a lot different from Unix and BSD. I won't talk about that right now, though.
+					</section>
+					<section data-markdown data-notes="^Note:">
+						## Directory Structure
+
+						Note:
+						Now let's talk about the filesystem. Unix filesystems don't have a C: drive or a D: drive. In windows your C: and D: drives corresponded to actual partitions on your hard disks. So if you draw a map for a Windows filesystem, it will look like several trees. In Unix, however, as opposed to having multiple trees, there is only one tree, and the topmost directory is called the root directory, noted by '/'.
+
+						If you connect a drive to your computer, and mount it, most often you will be mounting it in 
 					</section>
 					<section>
 						<img src="images/FS-layout.png">
+						<aside class="notes">
+						<p>So here's how it looks like. Now, you don't have to remember all of this, and the structure changes from Unix system to Unix system.</p>
+						<p>But there are some things you should remember.</p>
+						<p>For instance, generally speaking, the /bin folder stores all the most common Unix programs. 'bin' stands for binary. The /sbin folder stores programs that can only be run with superuser/Administrator permissions.</p>
+						<p>The /etc folder stores your system configuration files</p>
+						<p>The /tmp folder stores temporary files.</p>
+						<p>The /usr folder stores all kinds of programs and stuff specific to your particular installation but accessible by all users</p>
+						<p>The /home folder, which in OS X is the /Users folder, stores user home directories</p>
+						<p>The /mnt and /media folders are where you would normally find your partitions on external media as folders</p>
+						<p>The /boot folder contains files that are run when you start up your computer</p>
+						<p>The /dev folder contains interfaces to your physical devices</p>
+						<p>The /proc folder contains interfaces to your processes</p>
+						<p>The /var directory contains a lot of installation specific stuff that are expected to change as the system runs</p>
+						</aside>
 					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## A UNIX Program
-							* Input
-								* arguments
-								* STDIN (standard input)
-								* program may open arbitrary files for input
-							* output
-								* STDOUT
-								* STDERR
-								* program may open arbitrary files to output
-								* return value
-						</script>
-					</section>
-				</section>
-				<section>
-					<section data-markdown>
-						<script type="text/template">
-							## The Shell
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## The Prompt
+					<section data-markdown data-notes="^Note:">
+						## Unix programs
 
-								$
-								user@hostname:~$
-								# '~' is shorthand for user directory
-								root@hostname:~#
-								user@hostname:~$ command arg1 arg2 "arg 3" arg4 5
-							Press &lt;up&gt; to look at previous commands.
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## echo and variables
+						* Run with arguments
+						* Exposed to environment
+						* File descriptors and file streams
+							* 0, 1, 2 connected to STDIN, STDOUT, STDERR
+							* The shell can redirect file streams
+						* return value
 
-								echo 'Hello World!'
-								echo "Hello World!" # bash: !": event not found
-								# TODO: remove this line and quote"
-								echo 'I am at $PWD' # I am at $PWD
-								echo "I am at $PWD" # I am at /home/<user dir>
-								echo "I am at $PWD"'!' # I am at /home/<user dir>!
-								echo $PWD # /home/<user dir>
-								PLACE="the workshop" # no spaces allowed
-								# by convention, variables should be all caps
-								# variables can contain letters, numbers and underscore
-								# but cannot start with a number
-								echo "I am at $PLACE" right now # I am at the workshop
-								echo "I am at $PLACEs" # I am at
-								echo "Come see ${PLACE}s" # Come see the workshops
-								env # Pay attention to SHELL, USER, PATH, HOME
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## cat and redirection
+								$ cat
+								Hello World!
+								$ cat file1 file2
+								$ cat nosuchfile
+								$ cat file1 nosuchfile 2>&1 1> output.log | tee error.log
 
-								echo 'Hello World!' > helloworldfile
-								cat helloworldfile # Hello World!
-								echo "We are at $PLACE" > placefile
-								cat helloworldfile placefile
-								# Hello World!
-								# We are at the workshop
-								cat helloworldfile placefile > helloworldfile
-								cat helloworldfile
-								# We are at the workshop
-								echo 'Are you coming?' >> helloworldfile
-								cat helloworldfile
-								# We are at the workshop
-								# Are you coming?
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## more redirection
+						Note:
+						Now that we know a bit of how a Unix filesystem looks like, let's talk about the programs that run in Unix. So Unix programs, are run from the shell, which in our case is the bash shell. When we run these programs, we can send it arguments.
 
-								cat nosuchfile > output.log
-								# cat: nosuchfile: No such file or directory
-								cat nosuchfile > output.log 2>> error.log
-								cat error.log
-								# cat: nosuchfile: No such file or directory
-								cat 2>&1 1> output.log | \
-								tee -a error.log 1>&2 # 2> /dev/null
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## alias
+						In addition, these programs run in an environment, which I will talk about kater.
 
-								alias ..='cd ..'
-								alias /='cd /'
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## sleep and ^C (Ctrl+C)
+						So in the above example, at line 2, I have passed into the cat program it two arguments, file1 and file2.
 
-								sleep 60
-								^C
-						</script>
-					</section>
-				</section>
-				<section>
-					<section data-markdown>
-						<script type="text/template">
-							## Some basic commands
-							* __pwd__ print working directory
-							* __cd__ change working directory
-							* __ls__ list files
-							* __which__ locate a command
-							* __grep__ print lines matching a pattern
-							* __find__ search for files in a directory
-							* __xargs__ TODO
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## pwd
-							### print working directory
-								pwd
-								# /home/<user dir>
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## cd
-							### change working directory
+						When it runs, by default it opens three streams, standard input, standard output, and standard error. This is how a Unix program usually interacts with the shell and user input.
 
-								pwd
-								cd /
-								pwd
-								cd ~
-								pwd
-								cd .
-								cd ..
-								cd <username>
-								cd /<username>
-								# ce: no such file or directory: /<username>
-						</script>
+						And later on I'll talk about the return value of a program.
 					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## ls
-							### list files
 
-								ls # list files
-								ls -a # lists all files, including . .. and hidden files
-								ls -l
-								ls / # list files in '/'
-						</script>
+					<section data-markdown data-notes="^Note:">
+						# Redirection
+
+							echo 'This is standard output'
+							echo 'This is file 1' > file1
+							echo 'This is file 2' > file2
 					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## which
-							### locate a command
-
-								which sh
-								which -a vi
-						</script>
+					<section>
+						<img src="images/cat diagram.png">
+						<aside class="notes">
+							<p>So what you see here is a data flow diagram of what happens when you run the cat program. You might want to try it now. So I'll just be typing c-a-t-enter, and nothing happens.</p>
+							<p>cat is program that reads in files, then prints them out into standard output. That is if you give it arguments. If you don't, it reads in from standard input instead. Now this behavior of reading in from standard inpt is immensely useful, and we'll see why later.</p>
+							<p>Now if you type hello world and press enter, what will happen when you press enter is that cat will read in what you have just typed, and print it out to the screen.
+						</aside>
 					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## grep
-							### print lines matching a pattern
-
-							TODO: example
-						</script>
+					<section>
+						<img src="images/cat file1 file2 diagram.png">
+						<aside class="notes">
+						</aside>
 					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## find
-							### search for files in a directory hierarchy
-
-							TODO: example
-						</script>
+					<section>
+						<img src="images/cat nosuchfile diagram.png">
+						<aside class="notes">
+						</aside>
 					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## xargs
-
-								find /etc -name '*\.sh' | xargs head -2
-						</script>
+					<section>
+						<img src="images/cat file1 nosuchfile tee diagram.png">
+						<aside class="notes">
+						</aside>
 					</section>
 				</section>
 
 				<section>
-					<section data-markdown>
-						<script type="text/template">
-							## Filesystem Manipulation
+					<section data-markdown data-notes="^Note:">
+						## The bash Shell
 
-							* mkdir
-							* rmdir
-							* touch
-							* rm
-							* cp
-							* mv
-							* ln
-						</script>
+						Note:
+						Great! We've just run a couple programs from the bash shell! Now let's learn more about the shell.
 					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## mkdir
-							### make directory
+					<section data-markdown data-notes="^Note:">
+						## The Prompt
 
-								cd $HOME
-								mkdir template
-								ls # ... tmp ...
-								cd tmp
-								mkdir dir1 dir2 dir3 .dir4
-								ls # dir1 dir2 dir3
-								ls -a # . .. dir1 dir2 dir3 .dir4
-						</script>
+							$
+							user@hostname:~$
+							# '~' is shorthand for user directory
+							root@hostname:~#
+							user@hostname:~$ command arg1 arg2 "arg 3" arg4 5
+						Press ↑ to look at previous commands.
+
+						Note:
+						So here's the prompt you're seeing on your screen.
+
+						If you're a normal user, it's usually a dollar sign.
+						There's sometimes some information before the dollar sign, and you are able to customize it. I won't be telling you how to do that, but if we have free time you can ask me.
+
+						In this case, user is my username, and hostname is the name of the computer. The tilde sign means that I'm at my user home directory.
+
+						If you're the superuser root, you'll usually see a hash sign just so to remind you to be careful.
 					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## rmdir
-							### remove directory
+					<section data-markdown data-notes="^Note:">
+						## Some Basic commands
 
-								ls -a # . .. dir1 dir2 dir3 .dir4
-								rmdir dir3 .dir4
-								cd ..
-						</script>
+							echo 'Hello World'
+							pwd
+							ls
+							cd [folder in current location]
+							cd /[folder in root directory]
+							# help commands
+							man pwd
+							help cd
+							head --help | less
+
+						Note:
+						So here are some basic commands that you will probably be using.
+
+						Here's echo, which prints its arguments to standard output.
+
+						pwd tells you your current location.
+
+						ls shows you all the files and folders in your current directory. But if you 
+
+						if you run cd, and your argument does not start with a slash, you are going to go to that directory, relative to your current location. That means that say I run ls and I see a folder1, if I type cd folder1 I will go to that directory. Now ls shows me that there isn't anything in this newly created directory. But if I type cd '/home', I will be taken to the home directory instead.
+
+						man is a program that will give you documentation for a program that you run on your shell.
+
+						But some commands you give to bash are not programs. For that you use help.
+
+						Another way to get help is to tack on the --help argument to the end of a program.
 					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## touch
-							### create files and alter timestamps
+					<section data-markdown data-notes="^Note:">
+						## Redirection
 
-								cd tmp
-								touch file1
-								touch file2 file3 file4
-								ls -l # note the timestamp
-								touch file1
-								ls -l # the timestamp has changed
-						</script>
+							command 1> output.log # redirect to output.log
+							command 2>&1 # redirect 2 to 1.
+
+						Note:
+						Remember the greater than and vertical bar symbols in the previous chapter?
+
+						This is shell functionality. Redirecting standard input and standard output to either a file or another program is handled by the shell.
 					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## rm
-							### remove files
-								rm file3
-								cd ..
-								rm tmp
-								rm -r tmp
-								# rm -rf
-						</script>
+					<section data-markdown data-notes="^Note:">
+						## Variables
+
+						* Variable names consist of digits [0-9], letters [A-Za-z], or an underscore _, but cannot begin with a digit.
+
+
+							MY_VAR="this string" # defining a variable
+							# There must not be any whitespace around the equals sign
+							echo $MY_VAR # equivalent to "echo this string"
+							echo "$MY_VAR" # equivalent to 'echo "this string"'
+							echo '$MY_VAR' # equivalent to "echo '$MY_VAR'"
+							echo ${MY_VAR}er # equivalent to "echo this stringer"
+							echo $I_AM_NOT_DEFINED
+
+						Note:
+
+						You can define variables in the shell. Variables in bash are always strings. To use them in a command, add a dollar sign before the variable name. When you run a command with a variable, bash will first substitute the variable's value wherever it sees the variable name. We call this substitution interpolation.
+
+						However, bash does not interpolate anything in single quotes.
+
+						If you have letters, digits, or underscores after the variable, you have to escape the variable name by enclosing it in curly braces.
+
+						If the variable is not yet defined, it interpolates to an empty string.
 					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## cp
-							### copy files
+					<section data-markdown data-notes="^Note:">
+						## Environment
 
-								mkdir tmp
-								cd tmp
-								touch file1
-								cp file1 file2
-								cd ..
-								cp -a tmp tmp.bak
-								# -a preserves timestamps, permissions, and link References
-								ls -a
-								cp tmp/file2 tmp.bak
-						</script>
+						* shell contains an environment; environment is a name-value array.
+						* programs can see and change environment. In C, getenv(), setenv()
+							* e.g. man uses $PAGER
+							* e.g. git commit launches $VISUAL (if $GIT_EDITOR is not defined)
+						* to make a shell variable an environment variable, use the keyword export
+
+								export MY_VAR
+								export ANOTHER_VAR="variable value"
+
+								printenv
+								unset ANOTEHR_VAR
+
+						Note:
+
+						But sometimes you want to change the environment. The environment can affect the execution of programs. For example, when you run the man program, it looks at $PAGER and uses it to launch a program that will help you scroll through files.
+
+						Let's have a try. As you can see, PAGER is currently set to less. Let's try looking at the man page of which. As you can see, man has launched the less program.  If I press j I scroll down. Let me change $PAGER to cat. export PAGER=cat Let's try that again.
+
+						If you want to have a look at the environment, type env.
 					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## mv
-							### move files
+					<section data-markdown data-notes="^Note:">
+						## Search Path and Return Value
 
-								mv tmp/file2 tmp.bak
-								# TODO: will mv clobber?
-								# TODO
-						</script>
+							echo $PATH
+							echo $(IFS=:; set -- $line; printf "%s\n" "$@") # one-liner to print on separate lines
+							notaprogram
+							echo $?
+						
+						Note:
+
+						There's one super important environment variable and that is the search path. Let's have a look at PATH. It's a colon separated list of locations. What do these mean?
+
+						These locations are directories, not individual files. When you type in a command like cat, what happens is that the shell looks into each of these directories from left to right for a file named cat. If it finds such a file and it has permission to execute it, the shell tries to execute that program. Otherwise it looks into the next directory. If it is not found, an error is printed, and the previous return value is set to 127.
+
+						The previous return value is stored in the variable $?. Programs that execute successfully often have a return value of 0, while programs that execute unsuccessfully have a return value of 1.
 					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## ln
-							### make links between files
+					<section data-markdown data-notes="^Note:">
+						## More on programs
 
-								ln -s tmp tmp.ln
-								ln -s tmp/file1
-								ln -a tmp/file1 tmp_file1
-								ls -sP tmp/file1 tmp_file1
-						</script>
-					</section>
-				</section>
+							which cat
+							which cd
+							which bash
 
-				<section>
-					<section data-markdown>
-						<script type="text/template">
-							## Text Manipulation and Streams
-
-							* Pagers
-								* more
-								* less
-							* yes
-							* nl
-							* head
-							* tail
-							* cut
-							* paste
-							* sort
-							* uniq
-							* wc
-							* split
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## more
-							TODO
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## less
-							TODO
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## yes
-							### output a string repeatedly until killed
-
-								yes
-								yes "no"
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## nl
-							### number lines
-
-								yes | nl
-								cd tmp
-								echo "hello world" > hello
-								echo "line1
-								line2" > hello2
-								nl hello hello2
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## head
-							### output the first parts of file
-
-								yes "YEAH" | nl | head -1000 > 1000yeahs
-								head 1000yeahs
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## tail
-							### output the last parts of file
-
-								yes "ARGH" | nl | head -1000 | tail -10
-								yes "ARGH" | nl | head -1000 | tail -n+3 | head
-								# tail -n+3 skip first three lines
-								tail 1000yeahs
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## cut
-							### remove columns from each line of files
-
-								wget ftp://ftp.ncbi.nih.gov/genomes/Homo_sapiens/\
-								CHR_22/hs_ref_GRCh37.p13_chr22.asn.gz
-								head *ptt
-								cut -f2 *ptt | head
-								cut -f2,5 *ptt | head
-								cut -f2,5 *ptt | head -30
-								cut -f1 *ptt | cut -f1 -d'.' | head
-								cut -c1-20 *ptt | head
-						</script>
-					</section> 
-					<section data-markdown>
-						<script type="text/template">
-						## paste
-						### merge lines of files
-
-							tail -n+3 *ptt | cut -f5 > genes
-							tail -n+3 *ptt | cut -f1 > locs
-							paste genes locs genes | head
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						## sort
-						### sort lines of files
-
-							sort genes | less
-							sort -r genes | less # reverse order
-							sort -R genes | less # random order
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						## uniq
-						### report or omit repeated lines
-
-							cut -f2 *ptt | tail -n+4 | head
-							cut -f2 *ptt | tail -n+4 | sort | uniq -c | sort -k1 -rn
-							cut -f3 *ptt | tail -n+4 | uniq -c | sort -k2 -rn # output number
-							cut -f9 *ptt > products
-							sort products | uniq -d # only print duplicate lines
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						## wc
-						### print newline, word, and byte counts for each file
-
-							wc *ptt # lines words bytes
-							wc -l *ptt # number of lines
-							wc -L *ptt #longest line length; e.g. for style checking
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						## split
-						### split a file into pieces
-
-							split -d -l 1000 *ptt 
-						</script>
-					</section>
-
-				</section>
-
-				<section>
-					<section data-markdown>
-						<script type="text/template">
-							## System Management
-
-							* uname
-							* hostname
-							* whoami
-							* ps
-							* top
-							* kill
-							* time
-							* tar
-							* gzip
-							* df
-							* du
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## uname
-							### print system information
-
-								uname -a
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## hostname
-							### show or set the system host name
-
-								hostname
-								cat /etc/hostname
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## whoami
-							### print username
-
-								whoami
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## ps
-							### list running processes
-
-								sleep 60 &
-								ps -ef | grep sleep
-								ps -ef | grep sleep | grep -v "grep"
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## top
-							### display processes
-
-								top
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## kill
-							### kill processes or send a signal to processes
-
-								sleep 60 &
-								kill `ps xw | grep sleep | cut -f1 -d ' ' | head -l`
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## time
-							### run programs and summarize system resource usage
-
-								time sleep 5
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## tar
-							### archive files
-
-								mkdir genomes
-								mv *ptt* genome/
-								tar -cvf genome.tar genome
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## gzip
-							### compress files
-
-								gzip genome.tar
-								mkdir temp
-								cp genome.tar.gz temp
-								cd temp
-								tar -xzvf genome.tar.gz
-								cd ..
-								gunzip genome.tar.gz
-								rm -rf genome.tar genome temp
-								wget ftp://ftp.ncbi.nig.gov/genomes/Homo_sapiens/\
-								CHR_22/hs_ref_GRCh37.p13_chr22.asn.gz
-								zcat hs_ref_GRCh37.p13_chr22.asn.gz | nl | head -1000 | tail -20
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## df
-							### overall disk space usage
-
-								df -Th
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## du
-							### directory space utilization
-
-								du --max-depth=1 -b | sort -k1 -rn
-								du --max-depth=1 -bh
-						</script>
+						Note:
+						If you want to know the exact location of the program that you've just executed, you can use the which program. It will print to you the location of the program that you will execute when you type it.
 					</section>
 				</section>
-
 				<section>
-					<section data-markdown>
-						<script type="text/template">
-							## Networking
+					<section data-markdown data-notes="^Note:">
+						## Intermission: Repositories and Installing Software
 
-							* wget
-							* ssh
-							* scp
-							* rsync
-						</script>
+						* Using sed to find and replace
+						* 
+
+						* Repositories are "app stores" for Linux programs
+
+						Note:
+						Okay, we've gone through quite a bit. We'll be having a break, but first let's try to install some software.
+
+						You need an Internet connection for this, so for those who aren't NUS students, you might want to tether. It's a couple hundred megabytes of data. You can tether from my phone, but I'd appreciate it if you used your own.
+
+						A little bit about repositories. Repositories were the first app stores. A Ubuntu and Debian system had what we call a package manager that helped you install and uninstall stuff cleanly. To get software, and to update software, you connect to a repository and download a list that told you what packages have been updated, then you can choose to download and install the new software itself.
+
+						So, just like an app store.
 					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## ssh
-							### SSH client
+					<section data-markdown data-notes="^Note:">
+						## Using sed to find and replace
 
-								ssh jchoo@sunfire.comp.nus.edu.sg
-								# ssh config
-								ls ~/.ssh
-								less ~/.ssh/config
-								# generate ssh key
-								ssh-keygen -t rsa -C "your_email@example.com"
-								ssh-add id_rsa
+						ced/etc/apt
+						cat sources.list
+						sudo cp sources.list sources.list.bak
+						sed 's/us.archive.ubuntu.com/mirror.nus.edu.sg/' sources.list.bak
+						sed 's/\(us.archive.ubuntu.com\|security.ubuntu.com\)/mirror.nus.sg' sources.list.bak
+						sed 's/\(us.archive.ubuntu.com\|security.ubuntu.com\)/mirror.nus.sg' sources.list.bak > ~/sources.list
+						sudo mv sources.list .
 
-								# binding remote ports
-								ssh -L 9080:aquaroris.net:8080 aqnet
-								# can also bind databases
-						</script>
+						Note:
+						Now, how does Ubuntu know where the repository is located? It looks into the /etc/apr/sources.list file. Let's have a look at it.
+
+						You see these URLs? They refer to some server located in the US. Now, NUS has its own Ubuntu repository as well, that mirrors the default ones. So let's change these urls to NUS's repository by replacing the url.
+
+						sed stands for stream editor. What it does, is it reads a file line by line, then does some stuff to each line before outputting it to standard output.
+						Now what I've just typed replaces all instances of us.archive.ubuntu.com with mirror.nus.edu.sg and then prints it to the standard output.
+
+						This next line, with the escaped parentheses and the vertical bar, is a form of what we call regular expressions. In this case, what this means is that you substitute all instances of us.archive.ubuntu.com and security.ubuntu.com with mirror.nus.edu.sg . If you want to know more about regular expressions, there are many resources on it on the internet.
 					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## scp
-							### copy remote files
+					<section data-markdown data-notes="^Note:">
+						## 
 
-								scp /var/log/syslog sunfire:
-								# copies to home folder
+						sudo apt-get update
+						sudo apt-get install vim exiv2
 
-						</script>
+						Note:
+						So let's start installing! The first command fetches the list of packages mirror.nus.edu.sg has to offer, while the second command installs the vim and exov2 programs. Vim is a text editor, while exiv2 is a program that reads the metadata of JPEG files.
 					</section>
 				</section>
-
 				<section>
-					<section data-markdown>
-						<script type="text/template">
-							## Help
+					<section data-markdown data-notes="^Note:">
+						## What we've done so far
 
-							* man
-							* info
-							* help
-							* apropos
-							* the --help argument
-						</script>
+						* Setup Vagrant
+						* Unix filesystem
+						* Unix program
+						* bash redirection
+						* variables
+						* environment
+						* PATH
+						* sed's search and replace
+						* Installing from a repository
+
+						Next: Writing a script.
+
+						But first a break.
+
+						Note:
+						While your programs are downliading and installing, let's go through what we've done so far.
+					</section>
+				</section>
+				<section>
+					<section data-markdown data-markdown data-notes="^Note:">
+						## Writing a script
+
+						* The shebang
+						* Permissions
+						* Executing it from the shell.
+
+						Note:
+
+						Is everyone back? Right. We'll get started writing a couple scripts.
+					</section>
+					<section data-markdown data-markdown data-notes="^Note:">
+						## The shebang
+
+							sudo apt-get install vim # (or emacs)
+
+							vim hello_world.sh
+
+							echo "Hello World."
+
+							bash hello_world.sh
+
+						Adding a shebang
+
+							#!/bin/bash
+
+							echo "Hello World Again."
+
+							./hello_world.sh
+							bash hello_world.sh
+						or
+							#!/usr/bin/env bash
+
+						Note:
+						So let's write a 'Hello World script'. Open your editor. I like vim, and type 'echo "Hello World."'. Then close your editor, and then type "bash hello_world.sh" But thats really too slow and tedious.
+
+						We can execute it directly, but you will have to add something. You have to add a shebang to the top of your file. It's just one line and looks like that. When the shell is trying to execute hello_world.sh, it looks in the first line for the path to the program it should be execued under.
+
+						After that, you will be able to execute the file by ./hello_world.sh ; but not right now. I'll talk about that in a bit.
+
+						One popular alternative is using the env command. Sometimes users have special versions of the program that they want to use, and these may perhaps not be in the $PATH. The env command, when used like this, will get bash to execute the script.
+
+						If you try executing it with bash, it does indeed work.
+
+						So let's try to find out why ./hello_world.sh doesn't work.
+
+					</section>
+					<section data-markdown data-markdown data-notes="^Note:">
+						## Permissions
+
+							ls -l | grep hello_world.sh
+
+						* Files:
+							* r 4 (is readable)
+							* w 2 (is writable)
+							* x 1 (is executable)
+
+									chmod 764 hello_world.sh
+									chmod u+x hello_world.sh
+
+						* Directories
+							* r 4 (able to list files in directory)
+							* w 2 (able to edit, add, delete files in directory)
+							* x 1 (required to access files in directory)
+
+						Note:
+						ls -l gives us quite a bit of metadata information about our files. It prints the information of each file each in its own line. Since we're only interested in hello_world.sh, we'll pipe it to grep; and grep will filter away all the lines that does not contain the substring hello_world.sh .
+
+						So the reason why it doesn't work is that it does not have any executable permissions. Let's look at the permissions of hello_world.sh . The first column reads -rw-rw-r-- . The second to fourth character means that you have read and write permissions but no execute permissions. The next rw- means that the same applies to users who share the same group as you. The last r-- means that everyone else only has permissions to read this file.
+
+						To give yourself execute permissions, you can run chmod u+x hello_world.sh . Alternatively, you can use numbers. Just add up the numbers. 7 is 4+2+1 for the user, 6 is 4+2 for the group, and 4 is just read permission for others.
+
+					</section>
+					<section data-markdown data-markdown data-notes="^Note:">
+						## Executing it
+
+							./hello_world.sh
+							cd /
+							$OLDPWD/hello_world.sh
+
+							mkdir bin
+							export PATH="~/bin:$PATH"
+							mv hello_world.sh bin/hello_world
+							hello_world
+
+						Note:
+						So now that we have permissions, let's try executing it. Now the sintax here is a little interesting. The dot means the current directory, and hello_world.sh refers to the script that we've just created.
+
+						One of the interesting things you can do is ha
+
+					</section>
+					<section data-markdown data-markdown data-notes="^Note:">
+						## Creating a script
+
+							cat <<'EOS' > hello_world.sh
+							#!/usr/bin/env bash
+
+							echo "Hello World"
+							EOS
+
+							chmod u+x hello_world.sh
+							alias chx='chmod u+x'
+							./hello_world.sh
+
+						Note:
+						Here's a short summary on how to create a hello_world script. The double left arrows mean that what's going to follow is a heredoc. Everything until the EOS line will be turned into a string and passed into cat as standard input. And the output will be written into hello_world.sh
+
+						We make hello_world.sh executable, and then we run it.
+
+					</section>
+				</section>
+					<section data-markdown data-markdown data-notes="^Note:">
+						## A more interesting script
+
+						###Motivation
+
+						Rename JPEG photo files based on their timestamp.
+
+						Note:
+						Now let's get our hands dirty with a more interesting script. H
+
 					</section>
 				</section>
 
@@ -856,14 +594,6 @@
 							* for
 							* test
 							* read
-						</script>
-					</section>
-				</section>
-
-				<section>
-					<section data-markdown>
-						<script type="text/template">
-							DUMMY SLIDE FOR COPY PASTE
 						</script>
 					</section>
 				</section>
