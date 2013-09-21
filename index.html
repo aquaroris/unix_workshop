@@ -179,11 +179,13 @@
 							* The shell can redirect file streams
 						* return value
 
-								$ cat
-								Hello World!
-								$ cat file1 file2
-								$ cat nosuchfile
-								$ cat file1 nosuchfile 2>&1 1> output.log | tee error.log
+
+							$ cat
+							Hello World!
+							$ cat file1 file2
+							$ cat nosuchfile
+							$ cat file1 nosuchfile 2>&1 1> output.log | tee error.log
+
 
 						Note:
 						Now that we know a bit of how a Unix filesystem looks like, let's talk about the programs that run in Unix. So Unix programs, are run from the shell, which in our case is the bash shell. When we run these programs, we can send it arguments.
@@ -244,6 +246,8 @@
 							# '~' is shorthand for user directory
 							root@hostname:~#
 							user@hostname:~$ command arg1 arg2 "arg 3" arg4 5
+
+
 						Press ↑ to look at previous commands.
 
 						Note:
@@ -376,8 +380,6 @@
 						## Intermission: Repositories and Installing Software
 
 						* Using sed to find and replace
-						* 
-
 						* Repositories are "app stores" for Linux programs
 
 						Note:
@@ -392,13 +394,15 @@
 					<section data-markdown data-notes="^Note:">
 						## Using sed to find and replace
 
-						ced/etc/apt
-						cat sources.list
-						sudo cp sources.list sources.list.bak
-						sed 's/us.archive.ubuntu.com/mirror.nus.edu.sg/' sources.list.bak
-						sed 's/\(us.archive.ubuntu.com\|security.ubuntu.com\)/mirror.nus.sg' sources.list.bak
-						sed 's/\(us.archive.ubuntu.com\|security.ubuntu.com\)/mirror.nus.sg' sources.list.bak > ~/sources.list
-						sudo mv sources.list .
+							cd /etc/apt
+							cat sources.list
+							sudo cp sources.list sources.list.bak
+							sed 's/us.archive.ubuntu.com/mirror.nus.edu.sg/' sources.list.bak
+							sed 's/\(us.archive.ubuntu.com\|security.ubuntu.com\)/mirror.nus.sg' \
+								sources.list.bak
+							sed 's/\(us.archive.ubuntu.com\|security.ubuntu.com\)/mirror.nus.sg' \
+								sources.list.bak > ~/sources.list
+							sudo mv sources.list .
 
 						Note:
 						Now, how does Ubuntu know where the repository is located? It looks into the /etc/apr/sources.list file. Let's have a look at it.
@@ -413,8 +417,8 @@
 					<section data-markdown data-notes="^Note:">
 						## 
 
-						sudo apt-get update
-						sudo apt-get install vim exiv2
+							sudo apt-get update
+							sudo apt-get install vim exiv2
 
 						Note:
 						So let's start installing! The first command fetches the list of packages mirror.nus.edu.sg has to offer, while the second command installs the vim and exov2 programs. Vim is a text editor, while exiv2 is a program that reads the metadata of JPEG files.
@@ -448,7 +452,7 @@
 
 						* The shebang
 						* Permissions
-						* Executing it from the shell.
+						* Executing a script from the shell
 
 						Note:
 
@@ -467,14 +471,13 @@
 
 						Adding a shebang
 
+
 							#!/bin/bash
 
 							echo "Hello World Again."
 
 							./hello_world.sh
 							bash hello_world.sh
-						or
-							#!/usr/bin/env bash
 
 						Note:
 						So let's write a 'Hello World script'. Open your editor. I like vim, and type 'echo "Hello World."'. Then close your editor, and then type "bash hello_world.sh" But thats really too slow and tedious.
@@ -500,8 +503,10 @@
 							* w 2 (is writable)
 							* x 1 (is executable)
 
-									chmod 764 hello_world.sh
-									chmod u+x hello_world.sh
+
+							chmod 764 hello_world.sh
+							chmod u+x hello_world.sh
+
 
 						* Directories
 							* r 4 (able to list files in directory)
@@ -538,7 +543,7 @@
 						## Creating a script
 
 							cat <<'EOS' > hello_world.sh
-							#!/usr/bin/env bash
+							#!/bin/bash
 
 							echo "Hello World"
 							EOS
@@ -553,48 +558,240 @@
 						We make hello_world.sh executable, and then we run it.
 
 					</section>
+					<section data-markdown data-markdown data-notes="^Note:">
+						## Writing a script
+
+						* The shebang
+						* Permissions
+						* Executing a script from the shell
+
+						Note:
+
+						Is everyone back? Right. We'll get started writing a couple scripts.
+					</section>
 				</section>
+				<section>
 					<section data-markdown data-markdown data-notes="^Note:">
 						## A more interesting script
 
-						###Motivation
+						### Motivation
 
-						Rename JPEG photo files based on their timestamp.
+						Rename an entire folder of JPEG photo files based on their timestamp.
+
+							wget http://bit.ly/15d2lrN # image1.jpg
+							wget http://bit.ly/16vrIW0 # image2.jpg
+							exiv2 15d2lrN
+							exiv2 16vrIW0
+
+						* Getting the timestamp
+						* Intermission: subshells
+						* Testing
+						* Reading in arguments
+						* Get options
 
 						Note:
-						Now let's get our hands dirty with a more interesting script. H
+						Now let's get our hands dirty with a more interesting script.
+
+						Let's download two image files using wget.
+
+						Let's open them using exiv2. exiv2 shows you the EXIF metadata attached to pictures that you've taken with a camera. Now, I've artificially generated the EXIF metadata for these two files, so it looks quite sparse.
+
+						So maybe you're a photographer, and you have some photos to transfer over, but your different cameras take photos and write them to different filenames that tell you nothing. You want to rename these files so that they are sorted by time.
+					</section>
+					<section data-markdown data-markdown data-notes="^Note:">
+						## Getting the timestamp
+
+							exiv2 15d2lrN | grep "Image timestamp" | cut -d ' ' -f 4,5
+							exiv2 15d2lrN | grep "Image timestamp" | cut -d ' ' -f 4,5 \
+								| sed 's/\(.*\) \(.*\)/\1T\2.jpg/'
+							# alternatively, without substituting space with T
+							exiv2 15d2lrN | grep "Image timestamp" | cut -d ' ' -f 4,5 \
+								| sed 's/$/\1.jpg/'
+
+						Note:
+						Let's see if we can get the timestamp of the file. We use exiv2 to print the metadata, grep to filter the part that we're interested, then we use cut to get the column that we're interested.
+
+						The -d option tells cut to separate fields by spaces. The -f 4,5 tells cut that we're interested in the 4th and fifth columns.
+
+						This timestame is almost the ISO format for date and time. One cool thing about the ISO format is that if you sort these timestamps alphabetically, you will display them from the oldest to the newest.
+
+						Now I don't like spaces in my filenames, so I'm going to use sed to replace spaes with a T.
+					</section>
+					<section data-markdown data-markdown data-notes="^Note:">
+						## Intermission: Subshells
+
+						* Problem: Not all files contain EXIF data
+
+
+							echo $(cat nosuchfile file1)
+							echo $(cat nosuchfile $PWD/file1 2> /dev/null)
+							echo $(exiv2 file1 2> /dev/null | grep "Image timestamp")
+							#no output
+							man null
+
+						Note:
+						There's a problem. Not all files are image files, and not all image files contain EXIF data. You can't rename these files. We cannot expect the file passed into exiv2 to have an EXIF timestamp.
+
+						We can handle these cases, and one way to do it is use a subshell.
+
+						When bash sees a $ followed by a single pair of parentheses, what it does is invoke another bash shell, and run the commands within the parentheses. We call this other bash shell a subshell. The subshell will collect the standard output, but immediately print standard error to the terminal.
+
+						Then, it interpolates the everything in the $() with the standard output.
+
+						The /dev/null you see here is a special file. You can see what it does by looking at man null.
+
+						Data written to a null or zero special file is discarded.
+
+						It is a common practice to redirect unwanted output to /dev/null.
+
+
+					</section>
+					<section data-markdown data-markdown data-notes="^Note:">
+						## Testing
+
+						* Problem: Not all files contain EXIF data
+
+						
+
+							[ "$(exiv2 file1 2> /dev/null | grep "Image timestamp" \
+								| cut -d ' ' -f 4,5)" == '' ]
+							echo $?
+							[ "$(exiv2 file1 | grep "Image timestamp" \
+								| cut -d ' ' -f 4,5)" == '' ]
+							echo $?
+							man [
+
+						Note:
+						There's a unix program called test, which has an alternate form, which is this left bracket. The test program reads in the arguments, and evaluates it like an expression. Its return value tells you whether it is true or false. 0 means true, and 1 means false. Note that this is opposite from the true and false values of C.
+
+						And so now we know how to test if the file can be renamed.
+					</section data-markdown data-markdown data-notes="^Note:">
+					<section data-markdown data-markdown data-notes="^Note:">
+						## Reading in arguments
+
+							vim rename_images
+
+
+							#!/bin/bash
+							echo "$@"
+							echo "with quotes:"
+							for $FILENAME in "$@"
+							do
+								echo "$FILENAME"
+							done
+							echo "without quotes:"
+							for $FILENAME in $@
+							do
+								echo "$FILENAME"
+							done
+
+
+						* running it
+
+
+							chx rename_images
+							./rename_images arg1 "arg 2" arg3
+
+
+						Note:
+						You can read arguments into a script with $@. Now $@ is a little special. It preserves arguments with spaces in them if you quote it.
+
+						So let's try running this.
+					</section>
+					<section data-markdown data-markdown data-notes="^Note:">
+						## Putting it together
+
+							vim rename_images
+
+							#!/bin/bash
+
+							for FILENAME in "$@"
+							do
+								export FILENAME
+								NEWNAME="$(exiv2 $FILENAME | grep "Image timestamp" |"\
+									" cut -d ' ' -f 4,5 | sed 's/\(.*\) \(.*\)/\1T\2.jpg/')"
+
+								# don't forget to quote
+								if [ "$NEWNAME" != "" ] # equivalent to [ -n "$NEWNAME" ]
+								then
+									mv "$FILENAME" "$NEWNAME"
+								elif [ ! -e "$FILENAME" ] # file does not exist
+								then
+									echo "$0: $FILENAME: No such file" 1>&2
+								else
+									echo "$0: $FILENAME: No EXIF timestamp" 1>&2
+								fi
+							done
+
+						Note:
+						for loop
+
+						if, based on return value
+
+						quotes around variables
+					</section>
+					<section data-markdown data-notes="^Note:">
+						## Using getopts
+
+						* vim rename_images
+
+							#!/bin/bash
+
+							while getopts "e:" opt "$@"
+							do
+								case $opt in 
+									e)
+										export EXTENSION="$OPTARG"
+										;;
+									\?)
+										echo "Invalid option: -$OPTARG" >&2
+										;;
+								esac
+							done
+
+							for FILENAME in "${@:$(($OPTIND + 1)):}"
+							do
+								export FILENAME
+								# this line is changed
+								NEWNAME="$(exiv2 $FILENAME | grep "Image timestamp" | cut -d ' ' -f 4,5 | sed 's/\(.*\) \(.*\)/\1T\2'"$EXTENSION"'/')"
+
+								# don't forget to quote
+								if [ "$NEWNAME" != "" ] # equivalent to [ -n "$NEWNAME" ]
+								then
+									mv "$FILENAME" "$NEWNAME"
+								elif [ ! -e "$FILENAME" ] # file does not exist
+								then
+									echo "$0: $FILENAME: No such file" >&2
+								else
+									echo "$0: $FILENAME: No EXIF timestamp" >&2
+								fi
+							done
+					</section>
+					<section data-markdown data-markdown data-notes="^Note:">
+						## Script to Rename files by EXIF timestamp
+
+						* More piping, piping through sed
+						* Subshells
+						* Shell Tests
+						* Reading in arguments
+						* Get options
+
+						Time for another break!
+
+						Last part's gonna be relaxed.
+
+						Note:
 
 					</section>
 				</section>
 
 				<section>
 					<section data-markdown>
-						<script type="text/template">
-							## Scripting
-
-							* the shebang
-							* control logic
-							* test
-							* .bash_profile
-							* other scripting languages
-							* make and Makefiles
-							* cron and crontab
-						</script>
-					</section>
-				</section>
-
-				<section>
-					<section data-markdown>
-						<script type="text/template">
-							## Control Logic and more Shell Commands
-
-							* { }
-							* if
-							* while
-							* for
-							* test
-							* read
-						</script>
+						* setup.sh
+						* .bash_profile or .bashrc
+						* other scripting languages (Python, Ruby)
+						* make and Makefiles
+						* cron and crontab
 					</section>
 				</section>
 
