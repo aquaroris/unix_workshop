@@ -36,6 +36,36 @@
 
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
+				<section data-markdown data-notes="^Note:">
+					## Setting up Vagrant
+
+					* Copy the vagrant folder from the thumb drive to your user folder
+					* Install Vagrant
+						* Windows: Vagrant_1.3.1.msi
+						* OS X: Vagrant_1.3.1.dmg
+						* Debian/Ubuntu: use apt-get
+					* Open a terminal
+					* Navigate to the vagrant directory
+						* Windows: dir, cd
+						* OS X/Linux: ls, cd
+					* Type in
+						* vagrant box add precise32 precise32.box
+						* vagrant up
+						* vagrant ssh
+
+					Note:
+					But if you have yet to set up Vagrant, we are passing USBs around, and in them are what you need to install vagrant. So copy the vagrant folder to your user folder or home folder (for convenience), and run the appropriate installer. For Debian and Ubuntu, I suggest you do sudo apt-get vagrant instead.
+
+					So once you have Vagrant installed fire up a terminal and navigate to the folder. For Windows users that means cmd.exe, and for OS X and Linux users that means your Terminal. To go into a folder, use the cd command. To list the commands in your current folder, use dir.
+
+					When you're in the vagrant directory in your terminal, type in these commands.
+
+					The first will tell your Vagrant installation to add the precise32.box image to your installation's virtual machines.
+
+					The second will bring it up.
+
+					The last command will ssh you into your virtual machine.
+				</section>
 				<section>
 					<h1>UNIX and Shell Scripting</h1>
 					<p>
@@ -54,7 +84,7 @@
 					* UNIX
 					* bash
 					* writing bash scripts
-					* some bash scripts
+					* some uses of bash
 
 					Note:
 					So for this session I'll be going through several things, a bit about UNIX, a bit about bash, and a bit about writing bash scripts.
@@ -62,45 +92,6 @@
 					But before we get to this, I'd like to ensure that you have your Vagrant installation set up.
 				</section>
 				<section>
-					<section data-markdown data-notes="^Note:">
-						## Setting up Vagrant
-
-
-						* If you've downloaded vagrant and the image from the internet, great!
-
-						Note:
-						So, if you already have Vagrant set up, that's great!
-					</section>
-					<section data-markdown data-notes="^Note:">
-						## Otherwise
-
-						* Copy the vagrant folder from the thumb drive to your user folder
-						* Install Vagrant
-							* Windows: Vagrant_1.3.1.msi
-							* OS X: Vagrant_1.3.1.dmg
-							* Debian/Ubuntu: use apt-get
-						* Open a terminal
-						* Navigate to the vagrant directory
-							* Windows: dir, cd
-							* OS X/Linux: ls, cd
-						* Type in
-							* vagrant add precise32 precise32.box
-							* vagrant up
-							* vagrant ssh
-
-						Note:
-						But if you have yet to set up Vagrant, we are passing USBs around, and in them are what you need to install vagrant. So copy the vagrant folder to your user folder or home folder (for convenience), and run the appropriate installer. For Debian and Ubuntu, I suggest you do sudo apt-get vagrant instead.
-
-						So once you have Vagrant installed fire up a terminal and navigate to the folder. For Windows users that means cmd.exe, and for OS X and Linux users that means your Terminal. To go into a folder, use the cd command. To list the commands in your current folder, use dir.
-
-						When you're in the vagrant directory in your terminal, type in these commands.
-
-						The first will tell your Vagrant installation to add the precise32.box image to your installation's virtual machines.
-
-						The second will bring it up.
-
-						The last command will ssh you into your virtual machine.
-					</section>
 					<section data-markdown data-notes="^Note:">
 						##  Why Vagrant?
 
@@ -205,6 +196,9 @@
 							echo 'This is standard output'
 							echo 'This is file 1' > file1
 							echo 'This is file 2' > file2
+
+						Note:
+						We performed redirection just now. This is a shell "feature".
 					</section>
 					<section>
 						<img src="images/cat diagram.png">
@@ -233,13 +227,13 @@
 
 				<section>
 					<section data-markdown data-notes="^Note:">
-						## The bash Shell
+						## The bash shell
 
 						Note:
 						Great! We've just run a couple programs from the bash shell! Now let's learn more about the shell.
 					</section>
 					<section data-markdown data-notes="^Note:">
-						## The Prompt
+						## The prompt
 
 							$
 							user@hostname:~$
@@ -261,7 +255,7 @@
 						If you're the superuser root, you'll usually see a hash sign just so to remind you to be careful.
 					</section>
 					<section data-markdown data-notes="^Note:">
-						## Some Basic commands
+						## Some basic commands
 
 							echo 'Hello World'
 							pwd
@@ -349,7 +343,7 @@
 						If you want to have a look at the environment, type env.
 					</section>
 					<section data-markdown data-notes="^Note:">
-						## Search Path and Return Value
+						## Search path and return value
 
 							echo $PATH
 							echo $(IFS=:; set -- $line; printf "%s\n" "$@") # one-liner to print on separate lines
@@ -377,7 +371,7 @@
 				</section>
 				<section>
 					<section data-markdown data-notes="^Note:">
-						## Intermission: Repositories and Installing Software
+						## Intermission: repositories and installing software
 
 						* Using sed to find and replace
 						* Repositories are "app stores" for Linux programs
@@ -415,7 +409,7 @@
 						This next line, with the escaped parentheses and the vertical bar, is a form of what we call regular expressions. In this case, what this means is that you substitute all instances of us.archive.ubuntu.com and security.ubuntu.com with mirror.nus.edu.sg . If you want to know more about regular expressions, there are many resources on it on the internet.
 					</section>
 					<section data-markdown data-notes="^Note:">
-						## 
+						## Installing
 
 							sudo apt-get update
 							sudo apt-get install vim exiv2
@@ -435,12 +429,10 @@
 						* variables
 						* environment
 						* PATH
-						* sed's search and replace
-						* Installing from a repository
 
 						Next: Writing a script.
 
-						But first a break.
+						### But first a break.
 
 						Note:
 						While your programs are downliading and installing, let's go through what we've done so far.
@@ -460,8 +452,6 @@
 					</section>
 					<section data-markdown data-markdown data-notes="^Note:">
 						## The shebang
-
-							sudo apt-get install vim # (or emacs)
 
 							vim hello_world.sh
 
@@ -565,6 +555,8 @@
 						* Permissions
 						* Executing a script from the shell
 
+						### Break time!
+
 						Note:
 
 						Is everyone back? Right. We'll get started writing a couple scripts.
@@ -580,11 +572,11 @@
 
 							wget http://bit.ly/15d2lrN # image1.jpg
 							wget http://bit.ly/16vrIW0 # image2.jpg
-							exiv2 15d2lrN
-							exiv2 16vrIW0
+							exiv2 image1.jpg
+							exiv2 image2.jpg
 
 						* Getting the timestamp
-						* Intermission: subshells
+						* Intermission: subshell
 						* Testing
 						* Reading in arguments
 						* Get options
@@ -601,11 +593,11 @@
 					<section data-markdown data-markdown data-notes="^Note:">
 						## Getting the timestamp
 
-							exiv2 15d2lrN | grep "Image timestamp" | cut -d ' ' -f 4,5
-							exiv2 15d2lrN | grep "Image timestamp" | cut -d ' ' -f 4,5 \
+							exiv2 image1.jpg | grep "Image timestamp" | cut -d ' ' -f 4,5
+							exiv2 image1.jpg | grep "Image timestamp" | cut -d ' ' -f 4,5 \
 								| sed 's/\(.*\) \(.*\)/\1T\2.jpg/'
 							# alternatively, without substituting space with T
-							exiv2 15d2lrN | grep "Image timestamp" | cut -d ' ' -f 4,5 \
+							exiv2 image1.jpg | grep "Image timestamp" | cut -d ' ' -f 4,5 \
 								| sed 's/$/\1.jpg/'
 
 						Note:
@@ -618,12 +610,13 @@
 						Now I don't like spaces in my filenames, so I'm going to use sed to replace spaes with a T.
 					</section>
 					<section data-markdown data-markdown data-notes="^Note:">
-						## Intermission: Subshells
+						## Intermission: subshell
 
 						* Problem: Not all files contain EXIF data
 
 
 							echo $(cat nosuchfile file1)
+							# STDIN piped into an argument
 							echo $(cat nosuchfile $PWD/file1 2> /dev/null)
 							echo $(exiv2 file1 2> /dev/null | grep "Image timestamp")
 							#no output
@@ -675,12 +668,12 @@
 							#!/bin/bash
 							echo "$@"
 							echo "with quotes:"
-							for $FILENAME in "$@"
+							for FILENAME in "$@"
 							do
 								echo "$FILENAME"
 							done
 							echo "without quotes:"
-							for $FILENAME in $@
+							for FILENAME in $@
 							do
 								echo "$FILENAME"
 							done
@@ -733,7 +726,7 @@
 					<section data-markdown data-notes="^Note:">
 						## Using getopts
 
-						* vim rename_images
+							vim rename_images
 
 							#!/bin/bash
 
@@ -768,7 +761,7 @@
 							done
 					</section>
 					<section data-markdown data-markdown data-notes="^Note:">
-						## Script to Rename files by EXIF timestamp
+						## Script to rename files by EXIF timestamp
 
 						* More piping, piping through sed
 						* Subshells
@@ -776,9 +769,9 @@
 						* Reading in arguments
 						* Get options
 
-						Time for another break!
+						### Time for another break!
 
-						Last part's gonna be relaxed.
+						Last part's gonna be less hands on.
 
 						Note:
 
@@ -787,11 +780,87 @@
 
 				<section>
 					<section data-markdown>
-						* setup.sh
+						## Other interesting stuff
+
 						* .bash_profile or .bashrc
+						* setup.sh
+						* other bash features
+						* more unix programs
 						* other scripting languages (Python, Ruby)
 						* make and Makefiles
 						* cron and crontab
+					</section>
+					<section data-markdown>
+						## .bash_profile or .bashrc
+
+						Shell variables are not persistent!
+
+							cat /etc/profile # systemwide init
+							cat ~/.bash_profile # user init
+							cat /etc/bash.bashrc # systemwide interactive
+							cat .bashrc # user interactive
+
+							if [[ -r ~/.bash_aliases ]]; then
+								. ~/.bash_aliases
+							fi
+
+
+					</section>
+					<section data-markdown>
+						## setup.sh
+
+						postinstall.sh
+
+							cd $HOME
+							curl https://raw.github.com/startup-class/setup/master/setup.sh | less
+							curl https://raw.github.com/startup-class/setup/master/setup.sh | bash
+							# Be careful about executing code from the internet!
+
+						Note:
+						If you're using virtual machines sometimes what you want to do is create a script that initializes a development environment that you're confortable with.
+
+
+					</section>
+					<section data-markdown>
+						## other bash stuff and Unix programs
+
+							$ { command1; command2; }  > new_file # group commands
+							$ ${$string:0_index_start:end} # substring
+
+							#Linux only
+							$ find . -name '*.sh' | xargs -0 cat
+
+
+					</section>
+					<section data-markdown>
+						## Other scripting languages
+
+						Python
+
+
+							cat <<'EOS' > hello_world.py
+							#!/usr/bin/env python2
+
+							print "Hello World!"
+							EOS
+
+							chx hello_world.py
+							./hello_world.py
+
+
+						Ruby
+
+
+							cat <<'EOS' > hello_world.rb
+							#!/usr/bin/env ruby
+
+							puts "Hello World!"
+							EOS
+
+							chx hello_world.rb
+							./hello_world.rb
+
+
 					</section>
 				</section>
 
@@ -805,13 +874,16 @@
 							* [Advanced Bash-Scripting Guide](http://www.tldp.org/LDP/abs/html/) by Mendel Cooper
 							* [Startup Engineering notes on Coursera](https://d396qusza40orc.cloudfront.net/startup/lecture_slides%2Flecture4a-linux-command-line.pdf) by Balaji S. Srinivasan
 							* [Software Carpentry](http://software-carpentry.org/v4/index.html)
-						</script>
-					</section>
+						</script
+>					</section>
 				</section>
 
 				<section>
 					<section data-markdown>
-						# end
+						# We're done!
+
+						These slides will be available after the workshop.
+
 						Questions?
 					</section>
 				</section>
