@@ -6,8 +6,8 @@
 
     <title>UNIX and Shell Scripting</title>
 
-		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
-		<meta name="author" content="Hakim El Hattab">
+		<meta name="description" content="A short, whirlwind overview on Unix systems and bash and shell scripting">
+		<meta name="author" content="Johannes Choo">
 
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -39,7 +39,7 @@
 				<section data-markdown data-notes="^Note:">
 					## Setting up Vagrant
 
-					* Copy the vagrant folder from the thumb drive to your user folder
+					* Install VirtualBox
 					* Install Vagrant
 						* Windows: Vagrant_1.3.1.msi
 						* OS X: Vagrant_1.3.1.dmg
@@ -141,7 +141,7 @@
 						Note:
 						Now let's talk about the filesystem. Unix filesystems don't have a C: drive or a D: drive. In windows your C: and D: drives corresponded to actual partitions on your hard disks. So if you draw a map for a Windows filesystem, it will look like several trees. In Unix, however, as opposed to having multiple trees, there is only one tree, and the topmost directory is called the root directory, noted by '/'.
 
-						If you connect a drive to your computer, and mount it, most often you will be mounting it in 
+						If you connect a drive to your computer, and mount it, most often you will be mounting it in a folder, e.g. '/media/'
 					</section>
 					<section>
 						<img src="images/FS-layout.png">
@@ -572,8 +572,8 @@
 
 							wget http://bit.ly/15d2lrN # image1.jpg
 							wget http://bit.ly/16vrIW0 # image2.jpg
-							exiv2 image1.jpg
-							exiv2 image2.jpg
+							exiv2 15d2lrN
+							exiv2 16vrIW0
 
 						* Getting the timestamp
 						* Intermission: subshell
@@ -593,11 +593,11 @@
 					<section data-markdown data-markdown data-notes="^Note:">
 						## Getting the timestamp
 
-							exiv2 image1.jpg | grep "Image timestamp" | cut -d ' ' -f 4,5
-							exiv2 image1.jpg | grep "Image timestamp" | cut -d ' ' -f 4,5 \
+							exiv2 15d2lrN | grep "Image timestamp" | cut -d ' ' -f 4,5
+							exiv2 15d2lrN | grep "Image timestamp" | cut -d ' ' -f 4,5 \
 								| sed 's/\(.*\) \(.*\)/\1T\2.jpg/'
 							# alternatively, without substituting space with T
-							exiv2 image1.jpg | grep "Image timestamp" | cut -d ' ' -f 4,5 \
+							exiv2 15d2lrN | grep "Image timestamp" | cut -d ' ' -f 4,5 \
 								| sed 's/$/\1.jpg/'
 
 						Note:
@@ -742,7 +742,7 @@
 								esac
 							done
 
-							for FILENAME in "${@:$(($OPTIND + 1)):}"
+							for FILENAME in "${@:$OPTIND}"
 							do
 								export FILENAME
 								# this line is changed
